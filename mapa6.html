@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartografía Educativa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px;
+            font-size: 24px;
+        }
+
+        #map-container {
+            position: relative;
+            height: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cartografía Educativa: FU.CA.P.I en Coroico, Bolivia</h1>
+    <div id="map-container">
+        <div id="map"></div>
+        <div class="map-overlay">
+            <h2>Mapa de Coroico</h2>
+            <p>Este mapa muestra la ubicación del proyecto FU.CA.P.I.</p>
+        </div>
+    </div>
+
+    <div class="gallery">
+        <img src="img/inclusion.png" alt="Inclusión Comunitaria" class="thumbnail" onclick="openModal(this)">
+        <img src="img/professional.png" alt="Asesoría Profesional" class="thumbnail" onclick="openModal(this)">
+        <img src="img/resources.png" alt="Recursos Locales" class="thumbnail" onclick="openModal(this)">
+        <img src="img/family.png" alt="Participación Familiar" class="thumbnail" onclick="openModal(this)">
+        <img src="img/therapy.png" alt="Replicación de Terapias" class="thumbnail" onclick="openModal(this)">
+    </div>
+
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" class="modal-content">
+        <div id="caption"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Crear el mapa y establecer vista inicial
+        const map = L.map('map').setView([-16.1891, -67.7278], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Agregar marcadores al mapa
+        const images = [
+            { lat: -16.1901, lng: -67.7275, img: 'img/inclusion.png', text: 'Inclusión Comunitaria' },
+            { lat: -16.1895, lng: -67.7280, img: 'img/professional.png', text: 'Asesoría Profesional' },
+            { lat: -16.1888, lng: -67.7270, img: 'img/resources.png', text: 'Recursos Locales' },
+            { lat: -16.1910, lng: -67.7273, img: 'img/family.png', text: 'Participación Familiar' },
+            { lat: -16.1893, lng: -67.7268, img: 'img/therapy.png', text: 'Replicación de Terapias' },
+            
+            // Nuevos marcadores para Caranavi, Guanay y Teoponte
+            { lat: -15.7791, lng: -67.6967, img: 'img/img1.jpeg', text: 'Caranavi' },
+            { lat: -15.7670, lng: -67.4857, img: 'img/img2.jpeg', text: 'Guanay' },
+            { lat: -15.6444, lng: -67.9247, img: 'img/img3.jpeg', text: 'Teoponte' }
+        ];
+
+        images.forEach(item => {
+            const marker = L.marker([item.lat, item.lng]).addTo(map);
+            const popupContent = `<img src="${item.img}" alt="${item.text}" style="width:100px;height:100px;"><br><b>${item.text}</b>`;
+            marker.bindPopup(popupContent);
+        });
+
+        // Modal de imágenes
+        function openModal(image) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const caption = document.getElementById("caption");
+
+            modal.style.display = "block";
+            modalImg.src = image.src;
+            caption.innerText = image.alt;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
